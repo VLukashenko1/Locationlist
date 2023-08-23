@@ -57,8 +57,8 @@ public class PointsListLocationViewModel extends AndroidViewModel implements Act
 
     private void subscribeToCurrentLocation() {
         LocationRequest locationRequest = LocationRequest.create()
-                .setInterval(10000) // Update interval in milliseconds (e.g., 10 seconds)
-                .setFastestInterval(5000) // Fastest update interval in milliseconds
+                .setInterval(100000) // Update interval in milliseconds (e.g., 100 seconds)
+                .setFastestInterval(50000) // Fastest update interval in milliseconds
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); // Location accuracy preference
         try {
             fusedLocationClient.requestLocationUpdates(locationRequest, this.locationCallback, null);

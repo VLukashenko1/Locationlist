@@ -123,11 +123,13 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     public void changePoints(List<Point> pointList){
         this.points = pointList;
         this.pointsWithDistance = PointWithDistance.getPointListWithDistance(pointList, currentLocation);
+        Arrays.fill(isExpanded, false);
         notifyDataSetChanged();
     }
     public void changeCurrentLocation(LatLng currentLocation){
         this.currentLocation = currentLocation;
         this.pointsWithDistance = PointWithDistance.getPointListWithDistance(points, currentLocation);
+        Arrays.fill(isExpanded, false);
         notifyDataSetChanged();
     }
 
@@ -137,6 +139,8 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
 
     public void sort(Constants.SortTypes type) {
         pointsWithDistance = PointWithDistanceSorter.sort(pointsWithDistance, type);
+        Arrays.fill(isExpanded, false);
         notifyDataSetChanged();
     }
+
 }
