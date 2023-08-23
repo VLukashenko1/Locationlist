@@ -67,7 +67,7 @@ public class EditNoteDialog extends DialogFragment {
     }
 
     void checkInput(EditText editText){
-        if (editText != null && editText.getText() != null && !editText.getText().toString().isEmpty()){
+        if (editText != null && editText.getText() != null){
             pointWithDistance.point.note = editText.getText().toString();
             editNoteDialogViewModel.updatePointNote(pointWithDistance.point);
         }

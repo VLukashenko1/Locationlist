@@ -41,6 +41,9 @@ public class DistanceCalculator {
     }
 
     public String calculateDistanceBetweenTwoLatLngString(Point point, LatLng currentLocation){
+        if (currentLocation.longitude == 0 && currentLocation.longitude == 0){
+            return "- 0 -";
+        }
         Location location = new Location("currentLocation");
         location.setLongitude(currentLocation.longitude);
         location.setLatitude(currentLocation.latitude);
@@ -58,6 +61,10 @@ public class DistanceCalculator {
     }
 
     public float calculateDistanceBetweenTwoLatLngFloat(Point point, LatLng currentLocation) {
+        if (currentLocation.longitude == 0 && currentLocation.longitude == 0){
+            return 0;
+        }
+
         Location location1 = new Location("point1");
         location1.setLatitude(currentLocation.latitude);
         location1.setLongitude(currentLocation.longitude);

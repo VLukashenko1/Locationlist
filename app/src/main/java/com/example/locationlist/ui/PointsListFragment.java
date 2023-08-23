@@ -29,6 +29,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
+//todo handle on/off location actions an inform if need turn on it
+
 public class PointsListFragment extends Fragment implements PointListAdapter.OnItemClickListener {
     private PointsListLocationViewModel locationViewModel;
     private PointListViewModel pointsVM;
@@ -39,13 +41,16 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
     private LifecycleOwner lifecycleOwner;
     private boolean isRecyclerViewCreate = false;
     private View view;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         lifecycleOwner = this;
 
+        // view model where subscribed on current location
         locationViewModel = new ViewModelProvider(this).get(PointsListLocationViewModel.class);
+        // view model where subscribed on room points list
         pointsVM = new ViewModelProvider(this).get(PointListViewModel.class);
     }
 
@@ -65,7 +70,6 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
                 } else {
                     updateRecyclerView(points);
                 }
-
             }
         });
         locationViewModel.currentLocation.observe(lifecycleOwner, location -> {
@@ -96,12 +100,12 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
             pointListAdapter = new PointListAdapter(getContext(),
                     points,
                     currentLocation,
-                    this::onItemClick);
+                    this);
         } else {
             pointListAdapter = new PointListAdapter(getContext(),
                     points,
                     new LatLng(0, 0),
-                    this::onItemClick);
+                    this);
         }
 
         recyclerView.setAdapter(pointListAdapter);
@@ -118,12 +122,12 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
     }
 
     @Override
-    public void onItemClick(PointWithDistance point, int code) {
+    public void onItemClick(PointWithDistance point, Constants.RecyclerViewAction code) {
         switch (code) {
-            case 1:
+            case LAY_ROUTE:
                 layRoute(point);
                 break;
-            case 2:
+            case EDIT_NOTE:
                 editNote(point);
                 break;
         }
@@ -157,6 +161,7 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
         sortByNote = view.findViewById(R.id.SortByNoteBtn);
         sortByDistance = view.findViewById(R.id.SortByDistanceBtn);
         reverse = view.findViewById(R.id.sortReverceButton);
+
         sortByName.setOnClickListener(v -> pointListAdapter.sort(Constants.SortTypes.BY_NAME));
         sortByNote.setOnClickListener(v -> pointListAdapter.sort(Constants.SortTypes.BY_NOTE));
         sortByDistance.setOnClickListener(v -> pointListAdapter.sort(Constants.SortTypes.BY_DISTANCE));

@@ -7,5 +7,8 @@ public class Constants {
         BY_DISTANCE,
         REVERSE
     }
-
+    public enum RecyclerViewAction{
+        LAY_ROUTE,
+        EDIT_NOTE
+    }
 }
