@@ -100,12 +100,12 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
 
             route.setOnClickListener(v -> {
                 if (getAdapterPosition() != RecyclerView.NO_POSITION) {
-                    listener.onItemClick(pointsWithDistance.get(getAdapterPosition()).point, 1);
+                    listener.onItemClick(pointsWithDistance.get(getAdapterPosition()), 1);
                 }
             });
             noteEdit.setOnClickListener(v -> {
                 if (getAdapterPosition() != RecyclerView.NO_POSITION) {
-                    listener.onItemClick(pointsWithDistance.get(getAdapterPosition()).point, 2);
+                    listener.onItemClick(pointsWithDistance.get(getAdapterPosition()), 2);
                 }
             });
 
@@ -132,7 +132,7 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     }
 
     public interface OnItemClickListener {
-        void onItemClick(Point point, int code);
+        void onItemClick(PointWithDistance point, int code);
     }
 
     public void sort(Constants.SortTypes type) {

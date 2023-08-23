@@ -1,5 +1,7 @@
 package com.example.locationlist.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.example.locationlist.Constants;
 import com.example.locationlist.data.room.Point;
 import com.example.locationlist.ui.adapters.PointListAdapter;
+import com.example.locationlist.util.PointWithDistance;
 import com.example.locationlist.vm.PointListViewModel;
 import com.example.locationlist.vm.PointsListLocationViewModel;
 import com.example.locationlist.R;
@@ -36,7 +39,6 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
     private LifecycleOwner lifecycleOwner;
     private boolean isRecyclerViewCreate = false;
     private View view;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,7 +118,7 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
     }
 
     @Override
-    public void onItemClick(Point point, int code) {
+    public void onItemClick(PointWithDistance point, int code) {
         switch (code) {
             case 1:
                 layRoute(point);
@@ -127,12 +129,24 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
         }
     }
 
-    void layRoute(Point point) {
+    void layRoute(PointWithDistance point) {
         System.out.println("Route laying");
+        String destination = point.point.lat + "," + point.point.lng;
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destination + "&mode=d");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
+            getContext().startActivity(mapIntent);
+        } else {
+            Toast.makeText(getContext(), "it is not possible to build a route", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    void editNote(Point point) {
+    void editNote(PointWithDistance point) {
         System.out.println("Note Edit");
+        EditNoteDialog dialogFragment = new EditNoteDialog(point);
+        dialogFragment.show(getFragmentManager(), "CustomDialogFragment");
     }
 
     public void onSortButtonClick() {
