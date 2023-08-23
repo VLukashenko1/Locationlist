@@ -11,16 +11,24 @@ import com.example.locationlist.data.room.PointRoomDatabase;
 import java.util.List;
 
 public class PointsRepository {
+    private PointRoomDatabase db;
+
+    public PointDAO getPointDAO() {
+        return pointDAO;
+    }
+
     private PointDAO pointDAO;
     private LiveData<List<Point>> allPoints;
 
-    public PointsRepository(Application application){
-        PointRoomDatabase db = PointRoomDatabase.getDatabase(application);
+    public LiveData<List<Point>> getAllPoints() {
+        return allPoints;
+    }
+
+    public PointsRepository(Application application) {
+        db = PointRoomDatabase.getDatabase(application);
         pointDAO = db.pointDAO();
         allPoints = pointDAO.getPointsSortedDefault();
     }
 
-    public LiveData<List<Point>> getAllPoints(){
-        return allPoints;
-    }
+
 }

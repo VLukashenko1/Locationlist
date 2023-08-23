@@ -15,14 +15,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.locationlist.R;
 import com.example.locationlist.util.PointWithDistance;
+import com.example.locationlist.vm.EditNoteDialogViewModel;
 import com.squareup.picasso.Picasso;
 
 public class EditNoteDialog extends DialogFragment {
     PointWithDistance pointWithDistance;
-
+    private EditNoteDialogViewModel editNoteDialogViewModel;
     public EditNoteDialog(PointWithDistance pointWithDistance) {
         this.pointWithDistance = pointWithDistance;
     }
@@ -31,6 +33,8 @@ public class EditNoteDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+
+        editNoteDialogViewModel = new ViewModelProvider(this).get(EditNoteDialogViewModel.class);
 
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_note_edit, null);
@@ -63,6 +67,9 @@ public class EditNoteDialog extends DialogFragment {
     }
 
     void checkInput(EditText editText){
-
+        if (editText != null && editText.getText() != null && !editText.getText().toString().isEmpty()){
+            pointWithDistance.point.note = editText.getText().toString();
+            editNoteDialogViewModel.updatePointNote(pointWithDistance.point);
+        }
     }
 }
