@@ -27,7 +27,7 @@ public class DistanceCalculator {
 
                 float distance = location2.distanceTo(location);
                 if (distance > 1000){
-                    distance = distance/100;
+                    distance = distance/1000;
                     distanceList.add(Math.round(distance) + " km");
                 }
                 else {
@@ -40,7 +40,7 @@ public class DistanceCalculator {
         return supplier;
     }
 
-    public String calculateDistance(Point point, LatLng currentLocation){
+    public String calculateDistanceBetweenTwoLatLngString(Point point, LatLng currentLocation){
         Location location = new Location("currentLocation");
         location.setLongitude(currentLocation.longitude);
         location.setLatitude(currentLocation.latitude);
@@ -55,5 +55,17 @@ public class DistanceCalculator {
             return Math.round(distance) + "km";
         }
         else return Math.round(distance) + "m";
+    }
+
+    public float calculateDistanceBetweenTwoLatLngFloat(Point point, LatLng currentLocation) {
+        Location location1 = new Location("point1");
+        location1.setLatitude(currentLocation.latitude);
+        location1.setLongitude(currentLocation.longitude);
+
+        Location location2 = new Location("point2");
+        location2.setLatitude(point.lat);
+        location2.setLongitude(point.lng);
+
+        return location1.distanceTo(location2);
     }
 }

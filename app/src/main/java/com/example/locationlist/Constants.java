@@ -1,10 +1,11 @@
 package com.example.locationlist;
 
 public class Constants {
-    enum SortTypes{
+    public enum SortTypes {
         BY_NAME,
         BY_NOTE,
-        BY_DISTANCE
+        BY_DISTANCE,
+        REVERSE
     }
 
 }

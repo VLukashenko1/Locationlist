@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.locationlist.data.room.Point;
@@ -24,7 +25,6 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
 public class PointsListFragment extends Fragment implements PointListAdapter.OnItemClickListener{
-
     private PointsListLocationViewModel locationViewModel;
     private PointListViewModel pointsVM;
     private RecyclerView recyclerView;
@@ -32,6 +32,7 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
     private LatLng currentLocation;
     private List<Point> points;
 
+    private Button btnSortByName, btnSortByNote, btnSortByDistance;
     private LifecycleOwner lifecycleOwner;
     private boolean isRecyclerViewCreate = false;
     @Override
@@ -65,7 +66,6 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
         });
         locationViewModel.currentLocation.observe(lifecycleOwner, location->{
             if (location != null){
-                System.out.println("LOCATION NOT NULL");
                 currentLocation = location;
                 if (!isRecyclerViewCreate){
                     createRecyclerView();
@@ -73,7 +73,6 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
                     updateRecyclerView(location);
                 }
             }
-            System.out.println("LOCATION NULL");
         });
         locationViewModel.isLocationPermissionAllow.observe(lifecycleOwner, isEnabled -> {
             if (!isEnabled){
