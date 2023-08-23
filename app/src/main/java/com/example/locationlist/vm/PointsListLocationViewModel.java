@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -64,9 +65,11 @@ public class PointsListLocationViewModel extends AndroidViewModel implements Act
                 .setFastestInterval(5000) // Fastest update interval in milliseconds
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); // Location accuracy preference
         try {
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+            fusedLocationClient.requestLocationUpdates(locationRequest, this.locationCallback, null);
+            Log.d("Location service", "Location tracking started");
         } catch (SecurityException e) {
             //error
+            Log.d("Location service", "Location tracking NOT started" + e.getLocalizedMessage());
         }
 
     }
@@ -75,9 +78,11 @@ public class PointsListLocationViewModel extends AndroidViewModel implements Act
         @Override
         public void onLocationResult(@NonNull LocationResult locationResult) {
             super.onLocationResult(locationResult);
+
             LatLng latLng = new LatLng(locationResult.getLastLocation().getLatitude(),
                     locationResult.getLastLocation().getLongitude());
-            if (currentLocation.getValue() == null){
+
+            if (currentLocation == null || currentLocation.getValue() == null){
                 currentLocation.postValue(latLng);
             }else if(!currentLocation.getValue().equals(latLng)){
                 currentLocation.postValue(latLng);

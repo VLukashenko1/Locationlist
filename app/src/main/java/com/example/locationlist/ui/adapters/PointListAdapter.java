@@ -1,4 +1,4 @@
-package com.example.locationlist.ui;
+package com.example.locationlist.ui.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -18,7 +18,6 @@ import com.example.locationlist.util.DistanceCalculator;
 import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -124,8 +123,9 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     private void calculateDistance(){
         if (currentLocation == null || currentLocation.longitude == 0 && currentLocation.latitude == 0) {
             String[] s = new String[points.size()];
-            Arrays.fill(s, "-");
-            Arrays.asList(distance, s);
+            Arrays.fill(s, "- 0 -");
+            distance = Arrays.asList(s);
+            return;
         }
         DistanceCalculator distanceCalculator = new DistanceCalculator();
         try {
@@ -138,6 +138,16 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void changePoints(List<Point> pointList){
+        points = pointList;
+        notifyDataSetChanged();
+    }
+    public void changeCurrentLocation(LatLng latLng){
+        currentLocation = latLng;
+        calculateDistance();
+        notifyDataSetChanged();
     }
 
     public interface OnItemClickListener {

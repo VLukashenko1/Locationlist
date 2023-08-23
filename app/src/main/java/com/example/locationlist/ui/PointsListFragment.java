@@ -14,15 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.locationlist.data.InitialPoints;
 import com.example.locationlist.data.room.Point;
+import com.example.locationlist.ui.adapters.PointListAdapter;
 import com.example.locationlist.vm.PointListViewModel;
 import com.example.locationlist.vm.PointsListLocationViewModel;
 import com.example.locationlist.R;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class PointsListFragment extends Fragment implements PointListAdapter.OnItemClickListener{
@@ -35,7 +33,7 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
     private List<Point> points;
 
     private LifecycleOwner lifecycleOwner;
-
+    private boolean isRecyclerViewCreate = false;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,12 +55,25 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
         pointsVM.getAllPoints().observe(lifecycleOwner, pointsFromDb -> {
             if (pointsFromDb != null){
                 this.points = pointsFromDb;
-                createRecyclerView();
+                if (!isRecyclerViewCreate){
+                    createRecyclerView();
+                }else {
+                    updateRecyclerView(points);
+                }
+
             }
         });
         locationViewModel.currentLocation.observe(lifecycleOwner, location->{
-            if (location == null) return;
-            currentLocation = location;
+            if (location != null){
+                System.out.println("LOCATION NOT NULL");
+                currentLocation = location;
+                if (!isRecyclerViewCreate){
+                    createRecyclerView();
+                }else {
+                    updateRecyclerView(location);
+                }
+            }
+            System.out.println("LOCATION NULL");
         });
         locationViewModel.isLocationPermissionAllow.observe(lifecycleOwner, isEnabled -> {
             if (!isEnabled){
@@ -74,9 +85,8 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
     }
 
     private void createRecyclerView(){
-        System.out.println("CALLED");
+
         if (points == null) return;
-        System.out.println("CALLED WITH NOT NULL POINTS");
 
         if (currentLocation != null){
             pointListAdapter = new PointListAdapter(getContext(),
@@ -92,9 +102,14 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
 
         recyclerView.setAdapter(pointListAdapter);
 
-        //recycler view created
+        isRecyclerViewCreate = true;
     }
-    private void updateRecyclerView(){}
+    private void updateRecyclerView(List<Point> points){
+        pointListAdapter.changePoints(points);
+    }
+    private void updateRecyclerView(LatLng latLng){
+        pointListAdapter.changeCurrentLocation(latLng);
+    }
 
     @Override
     public void onItemClick(Point point, int code) {
