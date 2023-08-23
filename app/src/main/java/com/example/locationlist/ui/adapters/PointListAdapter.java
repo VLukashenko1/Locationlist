@@ -16,6 +16,7 @@ import com.example.locationlist.Constants;
 import com.example.locationlist.R;
 import com.example.locationlist.data.room.Point;
 import com.example.locationlist.util.PointWithDistance;
+import com.example.locationlist.util.PointWithDistanceSorter;
 import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
@@ -135,6 +136,7 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     }
 
     public void sort(Constants.SortTypes type) {
-
+        pointsWithDistance = PointWithDistanceSorter.sort(pointsWithDistance, type);
+        notifyDataSetChanged();
     }
 }

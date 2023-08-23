@@ -13,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.locationlist.Constants;
 import com.example.locationlist.data.room.Point;
 import com.example.locationlist.ui.adapters.PointListAdapter;
 import com.example.locationlist.vm.PointListViewModel;
@@ -24,17 +26,17 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-public class PointsListFragment extends Fragment implements PointListAdapter.OnItemClickListener{
+public class PointsListFragment extends Fragment implements PointListAdapter.OnItemClickListener {
     private PointsListLocationViewModel locationViewModel;
     private PointListViewModel pointsVM;
     private RecyclerView recyclerView;
     private PointListAdapter pointListAdapter;
     private LatLng currentLocation;
     private List<Point> points;
-
-    private Button btnSortByName, btnSortByNote, btnSortByDistance;
     private LifecycleOwner lifecycleOwner;
     private boolean isRecyclerViewCreate = false;
+    private View view;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,48 +56,49 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
         recyclerView = view.findViewById(R.id.recyclerView);
 
         pointsVM.getAllPoints().observe(lifecycleOwner, pointsFromDb -> {
-            if (pointsFromDb != null){
+            if (pointsFromDb != null) {
                 this.points = pointsFromDb;
-                if (!isRecyclerViewCreate){
+                if (!isRecyclerViewCreate) {
                     createRecyclerView();
-                }else {
+                } else {
                     updateRecyclerView(points);
                 }
 
             }
         });
-        locationViewModel.currentLocation.observe(lifecycleOwner, location->{
-            if (location != null){
-                currentLocation = location;
-                if (!isRecyclerViewCreate){
-                    createRecyclerView();
-                }else {
-                    updateRecyclerView(location);
-                }
+        locationViewModel.currentLocation.observe(lifecycleOwner, location -> {
+            if (location == null) return;
+
+            currentLocation = location;
+
+            if (isRecyclerViewCreate) {
+                updateRecyclerView(location);
+            } else {
+                createRecyclerView();
             }
         });
         locationViewModel.isLocationPermissionAllow.observe(lifecycleOwner, isEnabled -> {
-            if (!isEnabled){
+            if (!isEnabled) {
                 Toast.makeText(getContext(), "Location not available", Toast.LENGTH_SHORT).show();
             }
         });
-
+        this.view = view;
+        onSortButtonClick();
         return view;
     }
 
-    private void createRecyclerView(){
-
+    private void createRecyclerView() {
         if (points == null) return;
 
-        if (currentLocation != null){
+        if (currentLocation != null) {
             pointListAdapter = new PointListAdapter(getContext(),
                     points,
                     currentLocation,
                     this::onItemClick);
-        }else{
+        } else {
             pointListAdapter = new PointListAdapter(getContext(),
                     points,
-                    new LatLng(0,0),
+                    new LatLng(0, 0),
                     this::onItemClick);
         }
 
@@ -103,16 +106,18 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
 
         isRecyclerViewCreate = true;
     }
-    private void updateRecyclerView(List<Point> points){
+
+    private void updateRecyclerView(List<Point> points) {
         pointListAdapter.changePoints(points);
     }
-    private void updateRecyclerView(LatLng latLng){
+
+    private void updateRecyclerView(LatLng latLng) {
         pointListAdapter.changeCurrentLocation(latLng);
     }
 
     @Override
     public void onItemClick(Point point, int code) {
-        switch (code){
+        switch (code) {
             case 1:
                 layRoute(point);
                 break;
@@ -121,10 +126,27 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
                 break;
         }
     }
-    void layRoute(Point point){
+
+    void layRoute(Point point) {
         System.out.println("Route laying");
     }
-    void editNote(Point point){
+
+    void editNote(Point point) {
         System.out.println("Note Edit");
+    }
+
+    public void onSortButtonClick() {
+        Button sortByName, sortByNote, sortByDistance;
+        ImageButton reverse;
+
+        sortByName = view.findViewById(R.id.SortByNameBtn);
+        sortByNote = view.findViewById(R.id.SortByNoteBtn);
+        sortByDistance = view.findViewById(R.id.SortByDistanceBtn);
+        reverse = view.findViewById(R.id.sortReverceButton);
+        sortByName.setOnClickListener(v -> pointListAdapter.sort(Constants.SortTypes.BY_NAME));
+        sortByNote.setOnClickListener(v -> pointListAdapter.sort(Constants.SortTypes.BY_NOTE));
+        sortByDistance.setOnClickListener(v -> pointListAdapter.sort(Constants.SortTypes.BY_DISTANCE));
+        reverse.setOnClickListener(v -> pointListAdapter.sort(Constants.SortTypes.REVERSE));
+
     }
 }
