@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Location list</string>
+
+    <string name="name">name</string>
+    <string name="distance">distance</string>
+    <string name="note">note</string>
+</resources>
