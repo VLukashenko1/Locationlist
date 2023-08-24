@@ -40,7 +40,7 @@ public class EditNoteDialog extends DialogFragment {
         View dialogView = inflater.inflate(R.layout.dialog_note_edit, null);
 
         EditText editText = dialogView.findViewById(R.id.dialogNote);
-        editText.setText(pointWithDistance.point.note);
+        editText.setText(pointWithDistance.point.getNote());
 
         TextView textView = dialogView.findViewById(R.id.dialogDestinationTV);
         String fullString = "Distance to this point: ";
@@ -55,7 +55,7 @@ public class EditNoteDialog extends DialogFragment {
         textView.setText(spannableString);
 
         ImageView imageView = dialogView.findViewById(R.id.dialogPointIcon);
-        Picasso.get().load(pointWithDistance.point.photoLink).into(imageView);
+        Picasso.get().load(pointWithDistance.point.getPhotoLink()).into(imageView);
 
         builder.setView(dialogView)
                 .setTitle("Notate editor")
@@ -68,7 +68,7 @@ public class EditNoteDialog extends DialogFragment {
 
     void checkInput(EditText editText){
         if (editText != null && editText.getText() != null){
-            pointWithDistance.point.note = editText.getText().toString();
+            pointWithDistance.point.setNote(editText.getText().toString());
             editNoteDialogViewModel.updatePointNote(pointWithDistance.point);
         }
     }

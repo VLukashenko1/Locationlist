@@ -4,4 +4,7 @@
     <string name="name">name</string>
     <string name="distance">distance</string>
     <string name="note">note</string>
+    <string name="location_not_available">Location not available</string>
+    <string name="it_is_not_possible_to_build_a_route">it is not possible to build a route</string>
+    <string name="enter_notate">enter notate</string>
 </resources>

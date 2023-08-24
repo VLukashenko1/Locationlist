@@ -29,8 +29,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-//todo handle on/off location actions an inform if need turn on it
-
 public class PointsListFragment extends Fragment implements PointListAdapter.OnItemClickListener {
     private PointsListLocationViewModel locationViewModel;
     private PointListViewModel pointsVM;
@@ -63,16 +61,17 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
         recyclerView = view.findViewById(R.id.recyclerView);
 
         pointsVM.getAllPoints().observe(lifecycleOwner, pointsFromDb -> {
-            if (pointsFromDb != null) {
-                this.points = pointsFromDb;
-                if (!isRecyclerViewCreate) {
-                    createRecyclerView();
-                } else {
-                    updateRecyclerView(points);
-                }
+            if (pointsFromDb == null) return;
+
+            this.points = pointsFromDb;
+
+            if (!isRecyclerViewCreate) {
+                createRecyclerView();
+            } else {
+                updateRecyclerView(points);
             }
         });
-        locationViewModel.currentLocation.observe(lifecycleOwner, location -> {
+        locationViewModel.getCurrentLocation().observe(lifecycleOwner, location -> {
             if (location == null) return;
 
             currentLocation = location;
@@ -83,9 +82,9 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
                 createRecyclerView();
             }
         });
-        locationViewModel.isLocationPermissionAllow.observe(lifecycleOwner, isEnabled -> {
+        locationViewModel.getIsLocationPermissionAllow().observe(lifecycleOwner, isEnabled -> {
             if (!isEnabled) {
-                Toast.makeText(getContext(), "Location not available", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.location_not_available), Toast.LENGTH_SHORT).show();
             }
         });
         this.view = view;
@@ -135,7 +134,7 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
 
     void layRoute(PointWithDistance point) {
         System.out.println("Route laying");
-        String destination = point.point.lat + "," + point.point.lng;
+        String destination = point.point.getLat() + "," + point.point.getLng();
         Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destination + "&mode=d");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
@@ -143,7 +142,7 @@ public class PointsListFragment extends Fragment implements PointListAdapter.OnI
         if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
             getContext().startActivity(mapIntent);
         } else {
-            Toast.makeText(getContext(), "it is not possible to build a route", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.it_is_not_possible_to_build_a_route), Toast.LENGTH_SHORT).show();
         }
     }
 

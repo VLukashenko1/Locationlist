@@ -26,9 +26,9 @@ import java.util.List;
 public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.ViewHolder> {
     private boolean[] isExpanded;
     private OnItemClickListener listener;
-    List<PointWithDistance> pointsWithDistance;
-    List<Point> points;
-    LatLng currentLocation;
+    private List<PointWithDistance> pointsWithDistance;
+    private List<Point> points;
+    private LatLng currentLocation;
     private final LayoutInflater inflater;
 
     public PointListAdapter(Context context, List<Point> points, LatLng currentLocation, OnItemClickListener listener) {
@@ -38,7 +38,7 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         this.listener = listener;
         this.currentLocation = currentLocation;
 
-        isExpanded = new boolean[pointsWithDistance.size()];
+        isExpanded = new boolean[points.size()];
         Arrays.fill(isExpanded, false);
     }
 
@@ -54,15 +54,15 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         if (!isExpanded[position]) {
             holder.cardView.setVisibility(View.GONE);
             holder.distance.setText(pointsWithDistance.get(position).distanceString);
-            holder.name.setText(pointsWithDistance.get(position).point.name);
-            holder.note.setText(pointsWithDistance.get(position).point.note);
-            Picasso.get().load(pointsWithDistance.get(position).point.photoLink).into(holder.imageView);
+            holder.name.setText(pointsWithDistance.get(position).point.getName());
+            holder.note.setText(pointsWithDistance.get(position).point.getNote());
+            Picasso.get().load(pointsWithDistance.get(position).point.getPhotoLink()).into(holder.imageView);
         } else {
             holder.cardView.setVisibility(View.VISIBLE);
             holder.bigDistance.setText(pointsWithDistance.get(position).distanceString);
-            holder.bigName.setText(pointsWithDistance.get(position).point.name);
-            holder.bigNote.setText(pointsWithDistance.get(position).point.note);
-            Picasso.get().load(pointsWithDistance.get(position).point.photoLink).into(holder.bigImageView);
+            holder.bigName.setText(pointsWithDistance.get(position).point.getName());
+            holder.bigNote.setText(pointsWithDistance.get(position).point.getNote());
+            Picasso.get().load(pointsWithDistance.get(position).point.getPhotoLink()).into(holder.bigImageView);
         }
     }
 
@@ -120,27 +120,29 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
             notifyItemChanged(position);
         }
     }
-    public void changePoints(List<Point> pointList){
+
+    public void changePoints(List<Point> pointList) {
         this.points = pointList;
         this.pointsWithDistance = PointWithDistance.getPointListWithDistance(pointList, currentLocation);
         Arrays.fill(isExpanded, false);
         notifyDataSetChanged();
     }
-    public void changeCurrentLocation(LatLng currentLocation){
+
+    public void changeCurrentLocation(LatLng currentLocation) {
         this.currentLocation = currentLocation;
         this.pointsWithDistance = PointWithDistance.getPointListWithDistance(points, currentLocation);
         Arrays.fill(isExpanded, false);
         notifyDataSetChanged();
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(PointWithDistance point, Constants.RecyclerViewAction code);
-    }
-
     public void sort(Constants.SortTypes type) {
         pointsWithDistance = PointWithDistanceSorter.sort(pointsWithDistance, type);
         Arrays.fill(isExpanded, false);
         notifyDataSetChanged();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(PointWithDistance point, Constants.RecyclerViewAction code);
     }
 
 }

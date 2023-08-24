@@ -35,14 +35,14 @@ public class PointWithDistanceSorter {
     private static class PointsComparatorName implements Comparator<PointWithDistance> {
         @Override
         public int compare(PointWithDistance p1, PointWithDistance p2) {
-            return p1.point.name.compareTo(p2.point.name);
+            return p1.point.getName().compareTo(p2.point.getName());
         }
     }
 
     private static class PointsComparatorNote implements Comparator<PointWithDistance> {
         @Override
         public int compare(PointWithDistance p1, PointWithDistance p2) {
-            return p1.point.note.compareTo(p2.point.note);
+            return p1.point.getNote().compareTo(p2.point.getNote());
         }
     }
 }

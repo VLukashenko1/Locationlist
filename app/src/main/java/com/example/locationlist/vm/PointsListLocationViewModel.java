@@ -20,9 +20,17 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
 public class PointsListLocationViewModel extends AndroidViewModel implements ActivityCompat.OnRequestPermissionsResultCallback {
-    public MutableLiveData<LatLng> currentLocation = new MutableLiveData<>();
-    public MutableLiveData<Boolean> isLocationPermissionAllow = new MutableLiveData<>(true);
+    private MutableLiveData<LatLng> currentLocation = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isLocationPermissionAllow = new MutableLiveData<>(true);
     private FusedLocationProviderClient fusedLocationClient;
+
+    public MutableLiveData<LatLng> getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public MutableLiveData<Boolean> getIsLocationPermissionAllow() {
+        return isLocationPermissionAllow;
+    }
 
     public PointsListLocationViewModel(@NonNull Application application) {
         super(application);

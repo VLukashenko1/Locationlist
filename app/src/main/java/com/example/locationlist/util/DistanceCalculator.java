@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class DistanceCalculator {
-    public CompletableFuture<List<String>> supplier;
+    private CompletableFuture<List<String>> supplier;
 
     public CompletableFuture<List<String>> getSupplier(List<Point> points, LatLng currentLocation) {
         supplier = CompletableFuture.supplyAsync(() -> {
@@ -22,8 +22,8 @@ public class DistanceCalculator {
 
             for (Point point:points){
                 Location location2 = new Location("point");
-                location2.setLatitude(point.lat);
-                location2.setLongitude(point.lng);
+                location2.setLatitude(point.getLat());
+                location2.setLongitude(point.getLng());
 
                 float distance = location2.distanceTo(location);
                 if (distance > 1000){
@@ -49,8 +49,8 @@ public class DistanceCalculator {
         location.setLatitude(currentLocation.latitude);
 
         Location location2 = new Location("point");
-        location2.setLatitude(point.lat);
-        location2.setLongitude(point.lng);
+        location2.setLatitude(point.getLat());
+        location2.setLongitude(point.getLng());
 
         float distance = location.distanceTo(location2);
         if (distance > 1000){
@@ -70,8 +70,8 @@ public class DistanceCalculator {
         location1.setLongitude(currentLocation.longitude);
 
         Location location2 = new Location("point2");
-        location2.setLatitude(point.lat);
-        location2.setLongitude(point.lng);
+        location2.setLatitude(point.getLat());
+        location2.setLongitude(point.getLng());
 
         return location1.distanceTo(location2);
     }

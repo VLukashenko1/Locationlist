@@ -22,12 +22,12 @@ public abstract class PointRoomDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    public static PointRoomDatabase getDatabase(final Context context){
-        if (INSTANCE == null){
-            synchronized (PointRoomDatabase.class){
-                if (INSTANCE == null){
+    public static PointRoomDatabase getDatabase(final Context context) {
+        if (INSTANCE == null) {
+            synchronized (PointRoomDatabase.class) {
+                if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            PointRoomDatabase.class, "points_database")
+                                    PointRoomDatabase.class, "points_database")
                             .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
@@ -36,7 +36,7 @@ public abstract class PointRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback(){
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
@@ -48,7 +48,7 @@ public abstract class PointRoomDatabase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
 
-            databaseExecutor.execute( () -> {
+            databaseExecutor.execute(() -> {
 
                 PointDAO dao = INSTANCE.pointDAO();
 
